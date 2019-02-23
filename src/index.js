@@ -17,7 +17,7 @@ const createArgs = (value, name) => {
     }, []);
   }
 
-  throw Error('type must be one of "boolean" or "array"');
+  throw Error(`expected type "boolean" or "array", but received ${typeof value}`);
 };
 
 const listModuleExports = (path, builtin = false, external = false) => {
