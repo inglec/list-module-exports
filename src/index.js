@@ -3,16 +3,24 @@ const { join } = require('path');
 
 const { ERROR, SUCCESS } = require('./message_types');
 
-const createArgs = (array, name) => (
-  array.reduce((acc, arg) => {
-    acc.push(`-${name}`);
-    acc.push(arg);
+const createArgs = (value, name) => {
+  if (typeof value === 'boolean') {
+    return [`-${name}`, value];
+  }
 
-    return acc;
-  }, [])
-);
+  if (Array.isArray(value)) {
+    return value.reduce((acc, arg) => {
+      acc.push(`-${name}`);
+      acc.push(arg);
 
-const listModuleExports = (path, builtin = [], external = []) => {
+      return acc;
+    }, []);
+  }
+
+  throw Error('type must be one of "boolean" or "array"');
+};
+
+const listModuleExports = (path, builtin = false, external = false) => {
   const builtinArgs = createArgs(builtin, 'b');
   const externalArgs = createArgs(external, 'e');
   const child = fork(join(__dirname, 'child.js'), [path, ...builtinArgs, ...externalArgs]);
