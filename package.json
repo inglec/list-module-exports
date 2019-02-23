@@ -1,0 +1,31 @@
+{
+  "name": "list-module-exports",
+  "version": "1.0.0",
+  "description": "Return the keys of \"module.exports\" for the passed file",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src",
+    "test": "NODE_PATH=. jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inglec/list-module-exports.git"
+  },
+  "author": "Ciarán Ingle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/inglec/list-module-exports/issues"
+  },
+  "homepage": "https://github.com/inglec/list-module-exports#readme",
+  "devDependencies": {
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jest": "^22.3.0",
+    "jest": "^24.1.0"
+  },
+  "dependencies": {
+    "command-line-args": "^5.0.2",
+    "vm2": "^3.6.10"
+  }
+}
