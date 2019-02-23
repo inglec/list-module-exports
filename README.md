@@ -9,13 +9,11 @@ It is resistant to syntax errors and infinite loops.
 npm install --save https://github.com/inglec/list-module-exports
 ```
 
-``` js
-const listModuleExports = require('list-module-exports');
-```
-
 ## Usage
 
 ``` js
+const listModuleExports = require('list-module-exports');
+
 listModuleExports(path.join(__dirname, 'index.js'), ['fs'], true)
   .then(list => console.log(list))
   .catch(error => console.error(error));
