@@ -1,11 +1,14 @@
 const parseArgs = require('command-line-args');
 const { readFile } = require('fs');
+const { default: createLogger } = require('logging');
 const { promisify } = require('util');
 const { NodeVM } = require('vm2');
 
 const { ERROR, SUCCESS } = require('./message_types');
 
 const readFileAsync = promisify(readFile);
+
+const logger = createLogger('list-module-exports:child');
 
 const convertArg = (arg) => {
   if (typeof arg === 'boolean') {
@@ -52,6 +55,9 @@ function main() {
   const builtin = convertArg(args.builtin);
   const external = convertArg(args.external);
 
+  logger.debug('Built-in modules:', builtin);
+  logger.debug('External modules:', external);
+
   const vm = new NodeVM({
     console: 'off',
     require: {
@@ -64,17 +70,16 @@ function main() {
   readFileAsync(args.path)
     .then((file) => {
       const exported = vm.run(file, args.path);
+      logger.debug('Exports:', exported);
 
       if (typeof exported !== 'object') {
-        return Promise.reject(Error(`"module.exports" is of type "${typeof exported}"`));
+        throw Error(`"module.exports" is of type "${typeof exported}"`);
       }
 
       const keys = Object.keys(exported);
-      send(SUCCESS, keys);
-
-      return Promise.resolve();
+      send(SUCCESS, { keys });
     })
-    .catch(error => send(ERROR, error.message));
+    .catch(error => send(ERROR, { error: error.message }));
 }
 
 main();

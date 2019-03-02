@@ -1,7 +1,12 @@
 const { fork } = require('child_process');
+const { default: createLogger } = require('logging');
 const { join } = require('path');
 
 const { ERROR, SUCCESS } = require('./message_types');
+
+const TIMEOUT = 1000;
+
+const logger = createLogger('list-module-exports');
 
 const createArgs = (value, name) => {
   if (typeof value === 'boolean') {
@@ -29,31 +34,46 @@ const listModuleExports = (path, builtin = false, external = false) => {
     let running = true;
     setTimeout(() => {
       if (running) {
+        logger.debug(`Timed out after ${TIMEOUT}ms`);
         child.kill();
         reject(Error('timeout'));
       }
-    }, 1000);
+    }, TIMEOUT);
 
     child
       .on('message', (message) => {
         running = false;
 
-        switch (message.type) {
+        const { type, body } = message;
+        const { keys, error: errorMessage } = body;
+        const error = Error(errorMessage);
+
+        logger.debug('Received message:', type, keys || error);
+
+        switch (type) {
           case ERROR:
-            reject(Error(message.body));
+            reject(error);
             break;
           case SUCCESS:
-            resolve(message.body);
+            resolve(keys);
             break;
           default:
         }
       })
       .on('error', (error) => {
         running = false;
+        logger.debug(error);
         reject(error);
       })
-      .on('exit', () => {
+      .on('exit', (code, signal) => {
         running = false;
+        logger.debug('Exited with code', code, 'and signal', signal);
+
+        if (code === 0) {
+          resolve(signal);
+        } else {
+          reject(Error(`exited with code ${code} and signal ${signal}`));
+        }
       });
   });
 };

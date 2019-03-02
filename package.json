@@ -4,13 +4,16 @@
   "description": "Safely get the keys of \"module.exports\" for a Node program",
   "author": "Ciarán Ingle",
   "main": "src/index.js",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "lint": "eslint src",
     "test": "NODE_PATH=. jest"
   },
   "dependencies": {
     "command-line-args": "^5.0.2",
+    "logging": "^3.2.0",
     "vm2": "^3.6.10"
   },
   "devDependencies": {
