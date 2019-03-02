@@ -53,9 +53,6 @@ function main() {
   const builtin = convertArg(args.builtin, true);
   const external = convertArg(args.external);
 
-  logger.debug('Built-in modules:', builtin);
-  logger.debug('External modules:', external);
-
   const vm = new NodeVM({
     console: 'off',
     require: {

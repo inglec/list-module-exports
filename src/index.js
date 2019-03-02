@@ -67,7 +67,6 @@ const listModuleExports = (path, builtin = false, external = false) => {
       })
       .on('exit', (code, signal) => {
         running = false;
-        logger.debug('Exited with code', code, 'and signal', signal);
 
         if (code === 0) {
           resolve(signal);
