@@ -10,19 +10,18 @@ const readFileAsync = promisify(readFile);
 
 const logger = createLogger('list-module-exports:child');
 
-const convertArg = (arg) => {
-  if (typeof arg === 'boolean') {
-    return arg;
+const convertArg = (arg, isBuiltin = false) => {
+  if (arg.length === 1) {
+    switch (arg[0]) {
+      case 'true':
+        return isBuiltin ? ['*'] : true;
+      case 'false':
+        return false;
+      default:
+    }
   }
 
-  if (Array.isArray(arg)) {
-    return arg.length === 1 && typeof arg[0] === 'boolean' ? arg[0] : arg;
-  }
-
-  process.stderr(`expected type "boolean" or "array", but received "${typeof arg}"`);
-  process.exit(1);
-
-  return null;
+  return arg;
 };
 
 const send = (type, body) => process.send({ type, body });
@@ -51,8 +50,7 @@ function main() {
     process.exit(1);
   }
 
-  // Convert possible [ Boolean ] to Boolean.
-  const builtin = convertArg(args.builtin);
+  const builtin = convertArg(args.builtin, true);
   const external = convertArg(args.external);
 
   logger.debug('Built-in modules:', builtin);

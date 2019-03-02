@@ -14,11 +14,20 @@ describe('listModuleExports', () => {
       .toEqual(expect.arrayContaining(['key1', 'key2']));
   });
 
-  test('succeeds exporting whitelisted internal modules', () => {
+  test('succeeds exporting array of whitelisted internal modules', () => {
     const filepath = path.join(successPath, 'require_internal.js');
     const builtin = ['fs', 'path'];
 
     return expect(listModuleExports(filepath, builtin))
+      .resolves
+      .toEqual(expect.arrayContaining(builtin));
+  });
+
+  test('succeeds exporting all internal modules', () => {
+    const filepath = path.join(successPath, 'require_internal.js');
+    const builtin = ['fs', 'path'];
+
+    return expect(listModuleExports(filepath, true))
       .resolves
       .toEqual(expect.arrayContaining(builtin));
   });
