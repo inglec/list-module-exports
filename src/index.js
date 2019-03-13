@@ -4,7 +4,7 @@ const { join } = require('path');
 
 const { ERROR, SUCCESS } = require('./message_types');
 
-const TIMEOUT = 1000;
+const TIMEOUT = 5000;
 
 const logger = createLogger('list-module-exports');
 
